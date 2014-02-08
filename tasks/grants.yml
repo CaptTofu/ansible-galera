@@ -1,5 +1,5 @@
 ---
-# file: roles/docker-dna_percona/tasks/grants.yml
+# file: tasks/grants.yml
 
 - name: Add Docker database user 
   mysql_user: user={{ galera['dbusers']['docker']['username'] }} host={{ galera['dbusers']['docker']['host'] }}  password={{ galera['dbusers']['docker']['password'] }} priv=*.*:"all privileges"

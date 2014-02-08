@@ -7,6 +7,8 @@ socket          = /var/run/mysqld/mysqld.sock
 nice            = 0
 
 [mysqld]
+
+bind_address            = {{ galera['conf']['bind_address'] }}
 user                    = mysql
 pid-file                = /var/run/mysqld/mysqld.pid
 socket                  = /var/run/mysqld/mysqld.sock

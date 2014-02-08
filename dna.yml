@@ -1,6 +1,0 @@
----
-# file: dna.yml
-- include: docker-dna_galera.yml
-  vars:
-      clustercheck_user: clustercheck
-      clustercheck_password: clustercheck

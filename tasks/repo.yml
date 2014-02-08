@@ -1,5 +1,5 @@
 ---
-# file: roles/docker-dna_galera/tasks/repo.yml
+# file: tasks/repo.yml
 
 - name: Obtain Percona public key
   # apt_key: url=http://keys.gnupg.net/pks/lookup?op=get&search=0x1C4CBDCDCD2EFD2A

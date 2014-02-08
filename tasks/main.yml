@@ -1,5 +1,5 @@
 ---
-# file: roles/docker-dna_percona/tasks/main.yml
+# file: tasks/main.yml
 
 - include: misc.yml
 - include: repo.yml

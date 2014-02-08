@@ -1,6 +1,0 @@
----
-# file: docker-dna_galera.yml
-- hosts: docker-dna_galera
-  roles:
-    - common
-    - docker-dna_galera

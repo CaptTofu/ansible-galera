@@ -2,7 +2,7 @@
 #
 # VERSION    0.1.0
 #
-FROM capttofu/docker-dna_base
+FROM capttofu/ubuntu_base
 MAINTAINER Patrick aka CaptTofu Galbraith , patg@patg.net
 
 # Update distribution
@@ -14,10 +14,10 @@ RUN apt-get update \
 ADD . ./DockerDNA
 
 # Install Galera/PXC 
-RUN ( echo '[docker-dna_galera]' && \
+RUN ( echo '[ansible-galera]' && \
       echo 'localhost' \
     ) > /etc/ansible/hosts \
-      && ansible-playbook ./DockerDNA/dna.yml --connection=local \
+      && ansible-playbook ./site.yml --connection=local \
       && apt-get clean      
 
 # Expose MySQL/Galera 

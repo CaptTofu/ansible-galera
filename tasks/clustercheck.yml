@@ -1,4 +1,4 @@
-# file: roles/docker-dna_percona/tasks/clustercheck.yml
+# file: tasks/clustercheck.yml
 
 - name: Copy clustercheck script
   template: src=usr/bin/clustercheck.j2
