@@ -1,0 +1,8 @@
+---
+
+- name: Configure Percona XtraDB Cluster server
+  template: src=etc/mysql/my.cnf.j2
+            dest=/etc/mysql/my.cnf
+
+- name: Stop MySQL 
+  action: service name=mysql state=stopped

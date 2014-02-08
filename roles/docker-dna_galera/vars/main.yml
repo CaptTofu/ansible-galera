@@ -1,0 +1,15 @@
+---
+# file: roles/docker-dna_galera/vars/main.yml
+# these values are default - change for security!
+galera:
+    dbusers:
+        xtrabackup:
+            username: xtrabackup 
+            password: xtrabackup 
+        docker:
+            username: docker 
+            password: docker 
+            host: 172.17.%
+        clustercheck:
+            username: clustercheck
+            password: clustercheck

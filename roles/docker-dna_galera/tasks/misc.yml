@@ -1,0 +1,10 @@
+---
+# file: roles/docker-dna_percona/tasks/misc.yml
+
+- name: Install things I like
+  apt: pkg={{ item }}
+       state=present
+  with_items:
+    - vim
+
+
