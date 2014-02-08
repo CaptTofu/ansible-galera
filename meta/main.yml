@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: Patrick Galbraith 
+  description: An ansible role for Galera/Percona XtraDB Cluster 
+  company: Hewlett Packard 
+  license: Apache 2.0
+  min_ansible_version: 1.2
+  platforms:
+  - name: Ubuntu
+    versions:
+    - precise
+    - raring
+  categories:
+  - database 
+  - packaging
+dependencies: []

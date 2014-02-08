@@ -1,6 +1,7 @@
+# ansible-galera 0.1.0:
+## ansible galera 0.1.0
 
-# DockerDNA Galera 0.1.0:
-## Galera 0.1.0
+## This role will build a docker container that when launched can be used to build a Galera (Percona XtraDB) cluster.
 
 ### Run this container:
 
