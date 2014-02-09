@@ -8,7 +8,7 @@ nice            = 0
 
 [mysqld]
 
-bind_address            = {{ galera['conf']['bind_address'] }}
+bind_address            = {{ galera_conf['bind_address'] }}
 user                    = mysql
 pid-file                = /var/run/mysqld/mysqld.pid
 socket                  = /var/run/mysqld/mysqld.sock
@@ -48,7 +48,7 @@ log_slave_updates
 wsrep_provider          = /usr/lib/libgalera_smm.so
 wsrep_slave_threads     = 4
 wsrep_sst_method        = xtrabackup
-wsrep_sst_auth          = {{ galera['dbusers']['xtrabackup']['username'] }}:{{ galera['dbusers']['xtrabackup']['password'] }}
+wsrep_sst_auth          = {{ galera_conf['dbusers']['xtrabackup']['username'] }}:{{ galera_conf['dbusers']['xtrabackup']['password'] }}
 wsrep_cluster_name      = percona-cluster
 wsrep_cluster_address   = gcomm://
 # wsrep_node_name         =

@@ -1,7 +1,7 @@
 ---
 # file: vars/main.yml
 # these values are default - change for security!
-galera:
+galera_conf:
     bind_address: 0.0.0.0
     dbusers:
         xtrabackup:
