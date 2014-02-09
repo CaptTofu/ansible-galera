@@ -1,22 +1,29 @@
-# ansible-galera 0.1.0:
-## ansible galera 0.1.0
+Role Name
+========
 
-## This role will build a docker container that when launched can be used to build a Galera (Percona XtraDB) cluster.
+ansible-galera -- build a galera cluser node
 
-### Run this container:
+Requirements
+------------
 
-        docker run -d -t capttofu/docker-dna_base
+None
 
-### Build this container again:
+Role Variables
+--------------
 
-        git clone https://github.com/capttofu/docker-dna.git
-        cd ./docker-dna/galera
-        docker build -t yourname/docker-dna_base:0.1.0 .
+percona -- see main.yml in ./defaults
 
-### Run the container you built:
+Dependencies
+------------
 
-        docker run -d -t yourname/docker-dna_base
+None
 
-### Determine which container port(s) are listening:
+License
+-------
 
-        docker ps
+Apache 2.0
+
+Author Information
+------------------
+
+Patrick "CaptTofu" Galbraith <patg@patg.net>
