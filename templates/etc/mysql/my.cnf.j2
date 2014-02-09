@@ -76,4 +76,9 @@ max_allowed_packet      = 16M
 [isamchk]
 key_buffer              = 16M
 
+{% for host in groups['galera'] %}
+#        host {{ host }}
+#        address {{ hostvars[host]['ansible_' + iface].ipv4.address }}
+{% endfor %}
+
 !includedir /etc/mysql/conf.d/
