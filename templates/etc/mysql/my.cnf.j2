@@ -50,16 +50,25 @@ wsrep_slave_threads     = 4
 wsrep_sst_method        = xtrabackup
 wsrep_sst_auth          = {{ galera_conf['dbusers']['xtrabackup']['username'] }}:{{ galera_conf['dbusers']['xtrabackup']['password'] }}
 wsrep_cluster_name      = percona-cluster
-# wsrep_cluster_address   = gcomm://
+
+{# list of cluster members #}
 {% set cluster_members = [] -%}
-{%- for node in groups['galera'] %}
-  {%- if node !=  ansible_eth0.ipv4.address %}
-    {%- set _ = cluster_members.append(node) -%}
-  {% endif -%}
-{% endfor -%}
+{# flag to bootstrap #}
+
+{% set bootstrap_cluster = 0 -%}
+{%- if groups['galera_cluster'].index(ansible_eth0.ipv4.address) == 0 and "bootstrap" in bootstrap_check.stdout_lines[0] %}
+{%- set bootstrap_cluster = 1 %}
+{% endif -%}
+
+{%- if not bootstrap_cluster %}
+  {%- for node in groups['galera_cluster'] %}
+    {%- if node !=  ansible_eth0.ipv4.address %}
+      {%- set _ = cluster_members.append(node) -%}
+    {% endif -%}
+  {% endfor -%}
+{% endif -%}
 wsrep_cluster_address   = gcomm://{{ ",".join(cluster_members) }}
-# wsrep_node_name         =
-# wsrep_cluster_address   =
+wsrep_node_name         = {{ ansible_eth0.ipv4.address }}
 wsrep_provider_options  = gcache.size=2G;
 
 default_storage_engine          = InnoDB
@@ -82,5 +91,8 @@ max_allowed_packet      = 16M
 
 [isamchk]
 key_buffer              = 16M
+
+
+ 
 
 !includedir /etc/mysql/conf.d/

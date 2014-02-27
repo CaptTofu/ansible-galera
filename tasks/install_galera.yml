@@ -1,6 +1,15 @@
 ---
 # file: tasks/install_galera.yml 
 
+- name: check to determine if galera is aready installed
+  action: shell test -e /etc/mysql/my.cnf && echo "running" || echo "bootstrap"
+  register: bootstrap_check 
+#  command: find /usr/bin -name 'whatever'
+
+# name: another thing to do example
+# - include: somefile.yml
+#   when_string: {{ bootstrap_node.stdout }} == "exist" 
+
 - name: Install Percona XtraDB Cluster server
   apt: pkg={{ item }} 
        state=present
@@ -8,6 +17,7 @@
     - percona-xtradb-cluster-server-5.6
     - python-mysqldb
     - xinetd
+    - git 
 
 - name: Copy the helper script 
   copy: src=usr/local/bin/mysql_run.sh 

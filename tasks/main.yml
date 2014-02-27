@@ -1,7 +1,10 @@
 ---
 # file: tasks/main.yml
 
-- include: misc.yml
+- debug: msg="hostvars={{hostvars}}"
+- debug: msg="vars={{vars}}"
+- debug: msg="groups={{groups}}"
+#- include: misc.yml
 - include: repo.yml
 - include: install_galera.yml
 - include: grants.yml
