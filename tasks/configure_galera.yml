@@ -1,13 +1,13 @@
 ---
 
+#- group: name=mysql state=present
+
+#- user: name=mysql group=mysql state=present
+
+# Next command is optional
+#  command: find /usr/bin -name 'whatever'
 - name: Configure Percona XtraDB Cluster server
   template: src=etc/mysql/my.cnf.j2
             dest=/etc/mysql/my.cnf
             mode=0640 owner=mysql group=root
-  notify: restart mysql 
-
-- name: restart mysql
-  command: mysqladmin shutdown && mysqld_safe &
-
-#- name: Stop MySQL 
-#  action: service name=mysql state=stopped
+#  notify: restart mysql 

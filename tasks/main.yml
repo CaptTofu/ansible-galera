@@ -7,6 +7,6 @@
 #- include: misc.yml
 - include: repo.yml
 - include: install_galera.yml
-- include: grants.yml
 - include: configure_galera.yml
+- include: grants.yml
 - include: clustercheck.yml

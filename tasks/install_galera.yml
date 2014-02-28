@@ -1,10 +1,24 @@
 ---
-# file: tasks/install_galera.yml 
+# check if mtab is there
+- name: check if mtab exists
+  action: shell test -f /etc/mtab && echo "aqui" || echo "nada" 
+  register: mtab_check 
 
+# Create link if not already exists. Upstart for mysql needs this! 
+- name: create mtab if not exists 
+  action: file src=/proc/mounts dest=/etc/mtab state=link
+  when: mtab_check.stdout == "nada"
+
+# file: tasks/install_galera.yml 
+# check if galera is already installed
 - name: check to determine if galera is aready installed
-  action: shell test -e /etc/mysql/my.cnf && echo "running" || echo "bootstrap"
+  action: shell test -d /etc/mysql && echo "installed" || echo "bootstrap"
   register: bootstrap_check 
-#  command: find /usr/bin -name 'whatever'
+
+# Create link if not already exists. Upstart for mysql needs this! 
+# - name: create /etc/mysql if not exists 
+#  action: file path=/etc/mysql state=directory
+#  when: bootstrap_check.stdout == "bootstrap"
 
 # name: another thing to do example
 # - include: somefile.yml
