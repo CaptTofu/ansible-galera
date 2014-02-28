@@ -20,10 +20,6 @@
 #  action: file path=/etc/mysql state=directory
 #  when: bootstrap_check.stdout == "bootstrap"
 
-# name: another thing to do example
-# - include: somefile.yml
-#   when_string: {{ bootstrap_node.stdout }} == "exist" 
-
 - name: Install Percona XtraDB Cluster server
   apt: pkg={{ item }} 
        state=present
@@ -33,7 +29,12 @@
     - xinetd
     - git 
 
+- name: Copy the modified init script 
+  copy: src=etc/init.d/mysql
+        dest=/etc/init.d/mysql
+        mode=0755
+
 - name: Copy the helper script 
-  copy: src=usr/local/bin/mysql_run.sh 
-        dest=/usr/local/bin/mysql_run.sh 
+  copy: src=usr/local/bin/start_services.sh 
+        dest=/usr/local/bin/entrypoint.sh 
         mode=0755

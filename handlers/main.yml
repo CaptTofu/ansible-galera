@@ -1,2 +1,14 @@
 ---
-# file: handlers/main.yml
+# restart mysql
+
+- name: start mysql 
+  command: /etc/init.d/mysql start 
+
+- name: restart mysql 
+  command:  /etc/init.d/mysql restart 
+
+- name: stop mysql 
+  command:  /etc/init.d/mysql stop 
+
+- name: bootstrap node 
+  command:  /etc/init.d/mysql bootstrap-pxc 

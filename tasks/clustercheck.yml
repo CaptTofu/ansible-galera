@@ -16,12 +16,8 @@
             mode=0700
 
 # Create link if not already exists. Upstart for mysql needs this!
-- command: mysqladmin shutdown 
-  when: bootstrap_check.stdout == "bootstrap"
-
-# Create link if not already exists. Upstart for mysql needs this!
-- command: /usr/local/bin/mysql_run.sh
-  when: bootstrap_check.stdout == "bootstrap"
+# - command: /usr/local/bin/mysql_run.sh
+#   when: bootstrap_check.stdout == "bootstrap"
 # unable to get working on Docker
 #- name: Append clustercheck to services 
 #  lineinfile: dest=/etc/services
