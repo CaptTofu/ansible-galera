@@ -29,12 +29,5 @@
     - xinetd
     - git 
 
-- name: Copy the modified init script 
-  copy: src=etc/init.d/mysql
-        dest=/etc/init.d/mysql
-        mode=0755
-
-- name: Copy the helper script 
-  copy: src=usr/local/bin/start_services.sh 
-        dest=/usr/local/bin/entrypoint.sh 
-        mode=0755
+- name: Start MySQL
+  command: /etc/init.d/mysql restart
