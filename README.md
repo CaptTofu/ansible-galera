@@ -33,7 +33,7 @@ How do I use this?
 
 Very simple. 
 
-1. ansible-galaxy install --force --roles-path=/where/ever/you/want/your/roles CaptTofu.ansible-galera 
+1. ansible-galaxy install --force --roles-path=/where/ever/you/want/your/roles CaptTofu.galera 
 
 2. Add three galera hosts to your ansible hosts file
 
