@@ -1,0 +1,7 @@
+---
+# file: tasks/repo_rpm.yml
+
+- name: Obtain Percona public key and repo
+  yum: 
+    name: http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
+    state: present

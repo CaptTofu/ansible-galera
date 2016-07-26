@@ -1,0 +1,20 @@
+---
+# file: tasks/repo_deb.yml
+
+- name: Obtain Percona public key
+  apt_key: 
+    url: http://www.percona.com/downloads/RPM-GPG-KEY-percona
+    state: present
+  
+
+- name: Add Percona repository
+  apt_repository: 
+    repo: "deb http://repo.percona.com/apt {{ ansible_distribution_release }} main"
+    state: present
+    update_cache: yes
+
+- name: Add Percona source repository
+  apt_repository: 
+    repo: "deb-src http://repo.percona.com/apt {{ ansible_distribution_release }} main"
+    state: present
+    update_cache: yes
