@@ -1,5 +1,19 @@
 # file: tasks/clustercheck.yml
 
+- name: Stop all mysql daemons
+  service:
+    name: mysql
+    state: stopped
+  when: galera_conf['bootstrap']
+
+- name: Bootstrap cluster
+  shell: service mysql bootstrap-pxc
+  when: galera_conf['bootstrap'] and groups['galera_cluster'].index(inventory_hostname) == 0
+
+- name: Start Sync
+  shell: service mysql start
+  when: galera_conf['bootstrap'] and groups['galera_cluster'].index(inventory_hostname) != 0
+
 - name: Copy clustercheck script
   template: src=usr/bin/clustercheck.j2
             dest=/usr/bin/clustercheck

@@ -1,24 +1,9 @@
 ---
-# check if mtab is there
-- name: check if mtab exists
-  action: shell test -f /etc/mtab && echo "aqui" || echo "nada" 
-  register: mtab_check 
-
 # Create link if not already exists. Upstart for mysql needs this! 
-- name: create mtab if not exists 
-  action: file src=/proc/mounts dest=/etc/mtab state=link
-  when: mtab_check.stdout == "nada"
-
-# file: tasks/install_galera.yml 
-# check if galera is already installed
-- name: check to determine if galera is aready installed
-  action: shell test -d /etc/mysql && echo "installed" || echo "bootstrap"
-  register: bootstrap_check 
-
-# Create link if not already exists. Upstart for mysql needs this! 
-# - name: create /etc/mysql if not exists 
-#  action: file path=/etc/mysql state=directory
-#  when: bootstrap_check.stdout == "bootstrap"
+- name: create mtab if not exists
+  command: /bin/ls /proc/mounts /etc/mtab
+  args:
+    creates: /etc/mtab
 
 - name: Install Percona XtraDB Cluster server (DEB)
   apt: 
@@ -41,8 +26,3 @@
     - xinetd
     - git
   when: ansible_os_family == 'RedHat'
-
-- name: Start MySQL
-  service:
-    name: mysql
-    state: restarted
