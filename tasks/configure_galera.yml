@@ -7,3 +7,19 @@
     mode: 0640
     owner: mysql
     group: root
+
+- name: Configure /etc/services
+  lineinfile:
+    dest: /etc/services
+    line: "mysqlchk        9200/tcp                # mysqlchk"
+  tags:
+  - xinetd
+
+- name: Configure xinetd
+  template:
+    src: etc/xinetd.d/mysqlchk
+    dest: /etc/xinetd.d/mysqlchk
+    mode: 0600
+  notify: restart xinetd
+  tags:
+  - xinetd

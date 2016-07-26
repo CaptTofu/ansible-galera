@@ -12,3 +12,8 @@
 
 - name: bootstrap node 
   command:  /etc/init.d/mysql bootstrap-pxc 
+
+- name: restart xinetd 
+  service:
+    name: xinetd
+    state: restarted
