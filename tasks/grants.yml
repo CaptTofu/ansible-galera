@@ -2,11 +2,23 @@
 # file: tasks/grants.yml
 
 - name: Add Docker database user 
-  mysql_user: user={{ galera_conf['dbusers']['docker']['username'] }} host={{ galera_conf['dbusers']['docker']['host'] }}  password={{ galera_conf['dbusers']['docker']['password'] }} priv=*.*:"all privileges"
+  mysql_user: 
+    user: "{{ galera_conf['dbusers']['docker']['username'] }}"
+    host: "{{ galera_conf['dbusers']['docker']['host'] }}"
+    password: "{{ galera_conf['dbusers']['docker']['password'] }}"
+    priv: "*.*:all privileges"
 
 - name: Add xtrabackup database user (for Galera SST)
-  mysql_user: user={{ galera_conf['dbusers']['xtrabackup']['username'] }} host="localhost" password={{ galera_conf['dbusers']['xtrabackup']['password'] }} priv=*.*:"grant,reload,replication client"
+  mysql_user: 
+    user: "{{ galera_conf['dbusers']['xtrabackup']['username'] }}"
+    host: "localhost"
+    password: "{{ galera_conf['dbusers']['xtrabackup']['password'] }}"
+    priv: "*.*:grant,reload,replication client"
 
 - name: Add clustercheck database user (for clustercheck/xinetd -> haproxy) 
-  mysql_user: user={{ galera_conf['dbusers']['clustercheck']['username'] }} host="localhost" password={{ galera_conf['dbusers']['clustercheck']['password'] }} priv=*.*:"grant,reload,replication client"
+  mysql_user: 
+    user: "{{ galera_conf['dbusers']['clustercheck']['username'] }}"
+    host: "localhost"
+    password: "{{ galera_conf['dbusers']['clustercheck']['password'] }}"
+    priv: "*.*:grant,reload,replication client"
 
