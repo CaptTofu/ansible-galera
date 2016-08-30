@@ -12,9 +12,3 @@
     repo: "deb http://repo.percona.com/apt {{ ansible_distribution_release }} main"
     state: present
     update_cache: yes
-
-- name: Add Percona source repository
-  apt_repository: 
-    repo: "deb-src http://repo.percona.com/apt {{ ansible_distribution_release }} main"
-    state: present
-    update_cache: yes
