@@ -19,3 +19,11 @@
   when: galera_bootstrap and galera_nodes.index(inventory_hostname) != 0
   tags:
     - bootstrap
+
+- name: Bootstrap cluster
+  shell: service mysql bootstrap-pxc
+  when: galera_conf['bootstrap'] and groups['galera_cluster'].index(inventory_hostname) == 0
+
+- name: Start Sync
+  shell: service mysql start
+  when: galera_conf['bootstrap'] and groups['galera_cluster'].index(inventory_hostname) != 0

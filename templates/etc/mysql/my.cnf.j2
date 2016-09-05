@@ -65,6 +65,7 @@ log_slave_updates
     {%- set _ = cluster_members.append(hostvars[node].ansible_default_ipv4.address) -%}
   {% endif -%}
 {% endfor -%}
+
 wsrep_provider          = /usr/lib/libgalera_smm.so
 wsrep_slave_threads     = 4
 wsrep_sst_method        = xtrabackup-v2
