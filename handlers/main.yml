@@ -2,13 +2,24 @@
 # restart mysql
 
 - name: start mysql 
-  command: /etc/init.d/mysql start 
+  service:
+    name: mysql
+    state: started 
 
 - name: restart mysql 
-  command:  /etc/init.d/mysql restart 
+  service:
+    name: mysql
+    state: restarted 
 
 - name: stop mysql 
-  command:  /etc/init.d/mysql stop 
+  service:
+    name: mysql
+    state: stopped 
 
 - name: bootstrap node 
   command:  /etc/init.d/mysql bootstrap-pxc 
+
+- name: restart xinetd 
+  service:
+    name: xinetd
+    state: restarted
