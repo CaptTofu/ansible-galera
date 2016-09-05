@@ -6,15 +6,23 @@
     url: http://www.percona.com/downloads/RPM-GPG-KEY-percona
     state: present
   
-
 - name: Add Percona repository
   apt_repository: 
     repo: "deb http://repo.percona.com/apt {{ ansible_distribution_release }} main"
     state: present
     update_cache: yes
 
-- name: Add Percona source repository
-  apt_repository: 
-    repo: "deb-src http://repo.percona.com/apt {{ ansible_distribution_release }} main"
-    state: present
-    update_cache: yes
+- name: preseed MySQL
+  debconf:
+    name: "percona-xtradb-cluster-server-5.7"
+    question: "percona-xtradb-cluster-server-5.7/{{ item.question }}"
+    vtype: "{{ item.vtype }}"
+    value: "{{ item.value }}"
+  no_log: True
+  with_items:
+  - { question: "root-pass", vtype: "password", value: "{{ galera_dbusers['root']['password'] }}" }
+  - { question: "re-root-pass", vtype: "password", value: "{{ galera_dbusers['root']['password'] }}" }
+  - { question: "data-dir", vtype: "string", value: "{{ galera_datadir }}" }
+  tags:
+  - packages
+  - config
