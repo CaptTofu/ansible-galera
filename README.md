@@ -1,6 +1,9 @@
 Role Name
 ========
 
+https://www.percona.com/doc/percona-xtradb-cluster/5.6/howtos/ubuntu_howto.html
+https://www.percona.com/doc/percona-xtradb-cluster/5.6/manual/bootstrap.html
+
 ansible-galera -- build a galera cluser node
 
 Requirements

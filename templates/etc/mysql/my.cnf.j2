@@ -47,7 +47,7 @@ log_slave_updates
 
 wsrep_provider          = /usr/lib/libgalera_smm.so
 wsrep_slave_threads     = 4
-wsrep_sst_method        = xtrabackup
+wsrep_sst_method        = xtrabackup-v2
 wsrep_sst_auth          = {{ galera_conf['dbusers']['xtrabackup']['username'] }}:{{ galera_conf['dbusers']['xtrabackup']['password'] }}
 wsrep_cluster_name      = percona-cluster
 
@@ -64,13 +64,12 @@ wsrep_cluster_name      = percona-cluster
 
 {%- if not bootstrap_cluster %}
   {%- for node in groups['galera_cluster'] %}
-    {%- if hostvars[node].ansible_default_ipv4.address !=  ansible_eth0.ipv4.address %}
-      {%- set _ = cluster_members.append(hostvars[node].ansible_default_ipv4.address) -%}
-    {% endif -%}
+      {%- set _ = cluster_members.append(hostvars[node].galera_node_ip) -%}
   {% endfor -%}
 {% endif -%}
 wsrep_cluster_address   = gcomm://{{ ",".join(cluster_members) }}
-wsrep_node_name         = {{ ansible_eth0.ipv4.address }}
+wsrep_node_name         = {{ galera_node_ip }}
+wsrep_node_address      = {{ galera_node_ip }}
 wsrep_provider_options  = gcache.size=2G;
 
 default_storage_engine          = InnoDB

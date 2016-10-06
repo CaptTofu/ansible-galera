@@ -2,10 +2,14 @@
 # file: tasks/main.yml
 
 - debug: msg="hostvars={{hostvars}}"
+  when: debug is defined and debug
 - debug: msg="address {{ hostvars[inventory_hostname].ansible_default_ipv4.address }}  {{ ansible_eth0.ipv4.address }}"
+  when: debug is defined and debug
 - debug: msg="vars={{vars}}"
+  when: debug is defined and debug
 - debug: msg="groups={{groups}}"
-#- include: misc.yml
+  when: debug is defined and debug
+
 - include: repo.yml
 - include: install_galera.yml
 - include: grants.yml

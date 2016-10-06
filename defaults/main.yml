@@ -10,7 +10,7 @@ galera_conf:
         docker:
             username: docker 
             password: docker 
-            host: 172.17.%
+            host: "%"
         clustercheck:
             username: clustercheck
             password: clustercheck
