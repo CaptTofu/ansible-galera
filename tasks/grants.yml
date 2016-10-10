@@ -1,12 +1,25 @@
 ---
 # file: tasks/grants.yml
 
-- name: Add Docker database user 
-  mysql_user: user={{ galera_conf['dbusers']['docker']['username'] }} host={{ galera_conf['dbusers']['docker']['host'] }}  password={{ galera_conf['dbusers']['docker']['password'] }} priv="*.*:ALL"
+- name: Add database users
+  mysql_user:
+    user: "{{ item.username }}"
+    host: "{{ item.host }}"
+    password: "{{ item.password }}"
+    priv: "{{ item.priv | default('*.*:ALL') }}"
+  with_items: "{{ galera_db_users }}"
 
 - name: Add xtrabackup database user (for Galera SST)
-  mysql_user: user={{ galera_conf['dbusers']['xtrabackup']['username'] }} host="localhost" password={{ galera_conf['dbusers']['xtrabackup']['password'] }} priv="*.*:GRANT,RELOAD,REPLICATION CLIENT"
+  mysql_user:
+    user: "{{ galera_db_xtrabackup.username }}"
+    host: "localhost"
+    password: "{{ galera_db_xtrabackup.password }}"
+    priv: "*.*:GRANT,RELOAD,REPLICATION CLIENT"
 
 - name: Add clustercheck database user (for clustercheck/xinetd -> haproxy) 
-  mysql_user: user={{ galera_conf['dbusers']['clustercheck']['username'] }} host="localhost" password={{ galera_conf['dbusers']['clustercheck']['password'] }} priv="*.*:GRANT,RELOAD,REPLICATION CLIENT"
+  mysql_user:
+    user: "{{ galera_db_clustercheck.username }}"
+    host: "localhost"
+    password: "{{ galera_db_clustercheck.password }}"
+    priv: "*.*:GRANT,RELOAD,REPLICATION CLIENT"
 

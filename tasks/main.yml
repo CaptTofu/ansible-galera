@@ -2,16 +2,21 @@
 # file: tasks/main.yml
 
 - debug: msg="hostvars={{hostvars}}"
-  when: debug is defined and debug
+  when: debug
 - debug: msg="address {{ hostvars[inventory_hostname].ansible_default_ipv4.address }}  {{ ansible_eth0.ipv4.address }}"
-  when: debug is defined and debug
+  when: debug
 - debug: msg="vars={{vars}}"
-  when: debug is defined and debug
+  when: debug
 - debug: msg="groups={{groups}}"
-  when: debug is defined and debug
+  when: debug
 
 - include: repo.yml
+  tags: ["galera-install"]
 - include: install_galera.yml
-- include: grants.yml
+  tags: ["galera-install"]
 - include: configure_galera.yml
+  tags: ["galera-conf"]
+- include: grants.yml
+  tags: ["galera-grants"]
 - include: clustercheck.yml
+  tags: ["galera-check"]

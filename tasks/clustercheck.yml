@@ -1,26 +1,17 @@
 # file: tasks/clustercheck.yml
 
 - name: Copy clustercheck script
-  template: src=usr/bin/clustercheck.j2
-            dest=/usr/bin/clustercheck
-            owner=root
-            group=root
-            mode=0700
+  template:
+    src: "usr/bin/clustercheck.j2"
+    dest: "/usr/bin/clustercheck"
+    owner: "root"
+    group: "root"
+    mode: "0700"
 
-# restarting mysql because this is the very last thing that is done
 - name: Copy clustercheck script
-  template: src=usr/local/bin/pyclustercheck.j2
-            dest=/usr/local/bin/pyclustercheck
-            owner=root
-            group=root
-            mode=0700
-
-# Create link if not already exists. Upstart for mysql needs this!
-# - command: /usr/local/bin/mysql_run.sh
-#   when: bootstrap_check.stdout == "bootstrap"
-# unable to get working on Docker
-#- name: Append clustercheck to services 
-#  lineinfile: dest=/etc/services
-#              regexp="^mysqlchk        9200/tcp"
-#              line="mysqlchk        9200/tcp"
-#              state=present
+  template:
+    src: "usr/local/bin/pyclustercheck.j2"
+    dest: "/usr/local/bin/pyclustercheck"
+    owner: "root"
+    group: "root"
+    mode: "0700"

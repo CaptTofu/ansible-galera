@@ -8,7 +8,7 @@ nice            = 0
 
 [mysqld]
 
-bind_address            = {{ galera_conf['bind_address'] }}
+bind_address            = {{ galera_bind_address }}
 user                    = mysql
 pid-file                = /var/run/mysqld/mysqld.pid
 socket                  = /var/run/mysqld/mysqld.sock
@@ -48,25 +48,16 @@ log_slave_updates
 wsrep_provider          = /usr/lib/libgalera_smm.so
 wsrep_slave_threads     = 4
 wsrep_sst_method        = xtrabackup-v2
-wsrep_sst_auth          = {{ galera_conf['dbusers']['xtrabackup']['username'] }}:{{ galera_conf['dbusers']['xtrabackup']['password'] }}
+wsrep_sst_auth          = {{ galera_db_xtrabackup.username }}:{{ galera_db_xtrabackup.password }}
 wsrep_cluster_name      = percona-cluster
 
 {# list of cluster members #}
 {% set cluster_members = [] -%}
 
-{# flag to bootstrap #}
-{% set bootstrap_cluster = 0 -%}
 
-{# if this is the first node AND bootstrap #}
-{%- if groups['galera_cluster'].index(inventory_hostname) == 0 and "bootstrap" in bootstrap_check.stdout_lines[0] %}
-  {%- set bootstrap_cluster = 1 %}
-{% endif -%}
-
-{%- if not bootstrap_cluster %}
-  {%- for node in groups['galera_cluster'] %}
-      {%- set _ = cluster_members.append(hostvars[node].galera_node_ip) -%}
-  {% endfor -%}
-{% endif -%}
+{%- for node in groups['galera_cluster'] %}
+  {%- set _ = cluster_members.append(hostvars[node].galera_node_ip) -%}
+{% endfor -%}
 wsrep_cluster_address   = gcomm://{{ ",".join(cluster_members) }}
 wsrep_node_name         = {{ galera_node_ip }}
 wsrep_node_address      = {{ galera_node_ip }}

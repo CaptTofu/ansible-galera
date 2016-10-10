@@ -1,16 +1,16 @@
 ---
-# file: vars/main.yml
-# these values are default - change for security!
-galera_conf:
-    bind_address: 0.0.0.0
-    dbusers:
-        xtrabackup:
-            username: xtrabackup 
-            password: xtrabackup 
-        docker:
-            username: docker 
-            password: docker 
-            host: "%"
-        clustercheck:
-            username: clustercheck
-            password: clustercheck
+# file: default/main.yml
+
+galera_bind_address: 0.0.0.0
+
+galera_db_users: []
+galera_db_xtrabackup:
+  username: xtrabackup
+  password: xtrabackup
+galera_db_clustercheck:
+  username: clustercheck
+  password: clustercheck
+
+galera_nodes: []
+
+debug: false
