@@ -25,7 +25,7 @@ max_allowed_packet      = {{ galera_mysqld_max_allowed_packet }}
 thread_stack            = {{ galera_mysqld_thread_stack }}
 thread_cache_size       = {{ galera_mysqld_thread_cache_size }}
 
-myisam-recover          = {{ galera_mysqld_myisam-recover }}
+myisam-recover          = {{ galera_mysqld_myisam_recover }}
 query_cache_limit       = {{ galera_mysqld_query_cache_limit }}
 query_cache_size        = {{ galera_mysqld_query_cache_size }}
 
@@ -46,9 +46,9 @@ max_binlog_size         = {{ galera_mysqld_max_binlog_size }}
 wsrep_provider          = {{ galera_mysqld_wsrep_provider }}
 wsrep_slave_threads     = {{ galera_mysqld_wsrep_slave_threads }}
 wsrep_sst_method        = {{ galera_mysqld_wsrep_sst_method }}
-wsrep_sst_auth          = {{ galera_mysqld_db_xtrabackup.username }}:{{ galera_mysqld_db_xtrabackup.password }}
+wsrep_sst_auth          = {{ galera_db_xtrabackup.username }}:{{ galera_db_xtrabackup.password }}
 wsrep_cluster_name      = {{ galera_mysqld_wsrep_cluster_name }}
-wsrep_cluster_address   = gcomm://{{ ",".join(galera_mysqld_nodes) }}
+wsrep_cluster_address   = gcomm://{{ ",".join(galera_nodes) }}
 wsrep_node_name         = {{ galera_mysqld_wsrep_node_name }}
 wsrep_node_address      = {{ galera_mysqld_wsrep_node_address }}
 wsrep_provider_options  = {{ galera_mysqld_wsrep_provider_options }}

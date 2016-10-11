@@ -10,8 +10,6 @@
 - debug: msg="groups={{groups}}"
   when: debug
 
-- include: repo.yml
-  tags: ["galera-install"]
 - include: install_galera.yml
   tags: ["galera-install"]
 - include: configure_galera.yml
