@@ -20,6 +20,13 @@ debug: false
 
 ## my.cnf
 
+# for documentation see
+# http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html
+# http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html
+# http://dev.mysql.com/doc/refman/5.6/en/replication-options-binary-log.html
+# https://www.percona.com/doc/percona-xtradb-cluster/5.6/wsrep-system-index.html
+
+
 # [client]
 galera_client_port: 3306
 galera_client_socket: "/var/run/mysqld/mysqld.sock"
@@ -36,14 +43,15 @@ galera_mysqld_socket: "/var/run/mysqld/mysqld.sock"
 galera_mysqld_port: 3306
 galera_mysqld_basedir: "/usr"
 galera_mysqld_datadir: "/var/lib/mysql"
+# MyISAM storage engine has only experimental support with xtradb-cluster, InnoDB recommended
 galera_mysqld_default_storage_engine: "InnoDB"
 galera_mysqld_tmpdir: "/tmp"
 
 galera_mysqld_lc_messages_dir: "/usr/share/mysql"
-galera_mysqld_key_buffer: "16M"
-galera_mysqld_max_connections: "100"
-galera_mysqld_max_allowed_packet: "16M"
-galera_mysqld_thread_stack: "192K"
+galera_mysqld_key_buffer_size: "8MB"
+galera_mysqld_max_connections: "128"
+galera_mysqld_max_allowed_packet: "4M"
+galera_mysqld_thread_stack: "256KB"
 galera_mysqld_thread_cache_size: "8"
 
 galera_mysqld_myisam_recover: "BACKUP"
@@ -57,8 +65,9 @@ galera_mysqld_long_query_time: 2
 #galera_mysqld_server_id: 1
 galera_mysqld_log_bin: "/var/log/mysql/mysql-bin.log"
 galera_mysqld_sync_binlog: 1
+# In order for Galera to work correctly binlog format should be ROW
 galera_mysqld_binlog_format: "ROW"
-galera_mysqld_expire_logs_days: 2
+galera_mysqld_expire_logs_days: 10
 galera_mysqld_max_binlog_size: "100M"
 
 galera_mysqld_wsrep_provider: "/usr/lib/libgalera_mysqld_smm.so"
@@ -68,16 +77,17 @@ galera_mysqld_wsrep_sst_method: "xtrabackup-v2"
 galera_mysqld_wsrep_cluster_name: "percona-cluster"
 galera_mysqld_wsrep_node_name: "{{ galera_node_ip }}"
 galera_mysqld_wsrep_node_address: "{{ galera_node_ip }}"
-galera_mysqld_wsrep_provider_options: "gcache.size=2G;"
+galera_mysqld_wsrep_provider_options: ""
 
+# This changes how InnoDB autoincrement locks are managed and is a requirement for Galera
 galera_mysqld_innodb_autoinc_lock_mode: 2
 #galera_mysqld_innodb_locks_unsafe_for_binlog: 1
 
 galera_mysqld_innodb_thread_concurrency: 0
-galera_mysqld_innodb_buffer_pool_size: "50M"
-galera_mysqld_innodb_log_buffer_size: "64M"
+galera_mysqld_innodb_buffer_pool_size: "128MB"
+galera_mysqld_innodb_log_buffer_size: "8M"
 #galera_mysqld_innodb_flush_method: "O_DIRECT"
-galera_mysqld_innodb_log_file_size: "500M"
+galera_mysqld_innodb_log_file_size: "48M"
 galera_mysqld_extra: |
   skip-name-resolve
   skip-external-locking
