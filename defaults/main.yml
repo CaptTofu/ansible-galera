@@ -70,7 +70,7 @@ galera_mysqld_binlog_format: "ROW"
 galera_mysqld_expire_logs_days: 10
 galera_mysqld_max_binlog_size: "100M"
 
-galera_mysqld_wsrep_provider: "/usr/lib/libgalera_mysqld_smm.so"
+galera_mysqld_wsrep_provider: "/usr/lib/libgalera_smm.so"
 galera_mysqld_wsrep_slave_threads: 4
 galera_mysqld_wsrep_sst_method: "xtrabackup-v2"
 
@@ -89,7 +89,6 @@ galera_mysqld_innodb_log_buffer_size: "8M"
 #galera_mysqld_innodb_flush_method: "O_DIRECT"
 galera_mysqld_innodb_log_file_size: "48M"
 galera_mysqld_extra: |
-  skip-name-resolve
   skip-external-locking
   log-queries-not-using-indexes
   log_slave_updates
