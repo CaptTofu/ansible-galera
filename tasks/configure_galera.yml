@@ -1,18 +1,44 @@
 ---
 
 - name: Copy the modified init script 
-  copy: src=etc/init.d/mysql
-        dest=/etc/init.d/mysql
-        mode=0755
-
-- name: Copy the helper script 
-  copy: src=usr/local/bin/start_services.sh 
-        dest=/usr/local/bin/entrypoint.sh 
-        mode=0755
+  copy:
+    src: "etc/init.d/mysql"
+    dest: "/etc/init.d/mysql"
+    mode: "0755"
 
 - name: Configure Percona XtraDB Cluster server
-  template: src=etc/mysql/my.cnf.j2
-            dest=/etc/mysql/my.cnf
-            mode=0640 owner=mysql group=root
-  notify: restart mysql 
-  when: bootstrap_check.stdout == "bootstrap"
+  template:
+    src: "etc/mysql/my.cnf.j2"
+    dest: "/etc/mysql/my.cnf"
+    mode: "0640"
+    owner: "mysql"
+    group: "root"
+  register: galeraconf
+
+
+
+- name: Check if it's the first node and need to bootstrap instead of restart
+  shell: for IP in {{ galera_nodes|difference([galera_node_ip])|join(' ') }}; do nc -vz $IP 3306 && exit 0; done
+  register: ncvz_results
+  failed_when: false
+  changed_when: false
+
+- debug: var=ncvz_results
+  #when: debug
+
+- set_fact: galera_first_node="{{ ncvz_results.rc == 1 }}"
+
+- debug: var=galera_first_node
+
+- name: Check mysql status
+  shell: service mysql status
+  register: mysql_status
+  failed_when: false
+
+- name: Start MySQL
+  service: name=mysql state=restarted
+  when: not galera_first_node and (aptget.changed or galeraconf.changed or 'stopped' in mysql_status.stdout)
+
+- name: Bootstrap MySQL
+  command: /etc/init.d/mysql bootstrap-pxc
+  when: galera_first_node and (aptget.changed or galeraconf.changed or 'stopped' in mysql_status.stdout)

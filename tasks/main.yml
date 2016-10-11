@@ -2,12 +2,19 @@
 # file: tasks/main.yml
 
 - debug: msg="hostvars={{hostvars}}"
+  when: debug
 - debug: msg="address {{ hostvars[inventory_hostname].ansible_default_ipv4.address }}  {{ ansible_eth0.ipv4.address }}"
+  when: debug
 - debug: msg="vars={{vars}}"
+  when: debug
 - debug: msg="groups={{groups}}"
-#- include: misc.yml
-- include: repo.yml
+  when: debug
+
 - include: install_galera.yml
-- include: grants.yml
+  tags: ["galera-install"]
 - include: configure_galera.yml
+  tags: ["galera-conf"]
+- include: grants.yml
+  tags: ["galera-grants"]
 - include: clustercheck.yml
+  tags: ["galera-check"]

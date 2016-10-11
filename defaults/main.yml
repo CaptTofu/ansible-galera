@@ -1,16 +1,107 @@
 ---
-# file: vars/main.yml
-# these values are default - change for security!
-galera_conf:
-    bind_address: 0.0.0.0
-    dbusers:
-        xtrabackup:
-            username: xtrabackup 
-            password: xtrabackup 
-        docker:
-            username: docker 
-            password: docker 
-            host: 172.17.%
-        clustercheck:
-            username: clustercheck
-            password: clustercheck
+# file: default/main.yml
+
+galera_db_repo: "https://repo.percona.com/apt/percona-release_0.1-4.{{ ansible_distribution_release }}_all.deb"
+
+galera_bind_address: 0.0.0.0
+
+galera_db_users: []
+galera_db_xtrabackup:
+  username: xtrabackup
+  password: xtrabackup
+galera_db_clustercheck:
+  username: clustercheck
+  password: clustercheck
+
+galera_nodes: []
+
+debug: false
+
+
+## my.cnf
+
+# for documentation see
+# http://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html
+# http://dev.mysql.com/doc/refman/5.6/en/server-system-variables.html
+# http://dev.mysql.com/doc/refman/5.6/en/replication-options-binary-log.html
+# https://www.percona.com/doc/percona-xtradb-cluster/5.6/wsrep-system-index.html
+
+
+# [client]
+galera_client_port: 3306
+galera_client_socket: "/var/run/mysqld/mysqld.sock"
+
+# [mysqld_safe]
+galera_mysqld_safe_socket: "/var/run/mysqld/mysqld.sock"
+galera_mysqld_safe_nice: 0
+
+# [mysqld]
+galera_mysqld_bind_address: 0.0.0.0
+galera_mysqld_user: mysql
+galera_mysqld_pid_file: "/var/run/mysqld/mysqld.pid"
+galera_mysqld_socket: "/var/run/mysqld/mysqld.sock"
+galera_mysqld_port: 3306
+galera_mysqld_basedir: "/usr"
+galera_mysqld_datadir: "/var/lib/mysql"
+# MyISAM storage engine has only experimental support with xtradb-cluster, InnoDB recommended
+galera_mysqld_default_storage_engine: "InnoDB"
+galera_mysqld_tmpdir: "/tmp"
+
+galera_mysqld_lc_messages_dir: "/usr/share/mysql"
+galera_mysqld_key_buffer_size: "8MB"
+galera_mysqld_max_connections: "128"
+galera_mysqld_max_allowed_packet: "4M"
+galera_mysqld_thread_stack: "256KB"
+galera_mysqld_thread_cache_size: "8"
+
+galera_mysqld_myisam_recover: "BACKUP"
+galera_mysqld_query_cache_limit: "1M"
+galera_mysqld_query_cache_size: "16M"
+
+galera_mysqld_log_error: "/var/log/mysql/err.log"
+galera_mysqld_slow_query_log: 1
+galera_mysqld_long_query_time: 2
+
+#galera_mysqld_server_id: 1
+galera_mysqld_log_bin: "/var/log/mysql/mysql-bin.log"
+galera_mysqld_sync_binlog: 1
+# In order for Galera to work correctly binlog format should be ROW
+galera_mysqld_binlog_format: "ROW"
+galera_mysqld_expire_logs_days: 10
+galera_mysqld_max_binlog_size: "100M"
+
+galera_mysqld_wsrep_provider: "/usr/lib/libgalera_smm.so"
+galera_mysqld_wsrep_slave_threads: 4
+galera_mysqld_wsrep_sst_method: "xtrabackup-v2"
+
+galera_mysqld_wsrep_cluster_name: "percona-cluster"
+galera_mysqld_wsrep_node_name: "{{ galera_node_ip }}"
+galera_mysqld_wsrep_node_address: "{{ galera_node_ip }}"
+galera_mysqld_wsrep_provider_options: ""
+
+# This changes how InnoDB autoincrement locks are managed and is a requirement for Galera
+galera_mysqld_innodb_autoinc_lock_mode: 2
+#galera_mysqld_innodb_locks_unsafe_for_binlog: 1
+
+galera_mysqld_innodb_thread_concurrency: 0
+galera_mysqld_innodb_buffer_pool_size: "128MB"
+galera_mysqld_innodb_log_buffer_size: "8M"
+#galera_mysqld_innodb_flush_method: "O_DIRECT"
+galera_mysqld_innodb_log_file_size: "48M"
+galera_mysqld_extra: |
+  skip-external-locking
+  log-queries-not-using-indexes
+  log_slave_updates
+  innodb_file_per_table
+
+# [mysqldump]
+galera_mysqldump_max_allowed_packet: "16M"
+galera_mysqldump_extra: |
+  quick
+  quote-names
+
+galera_mysql_extra: |
+  #no-auto-rehash # faster start of mysql but no tab completition
+
+# [isamchk]
+galera_isamchk_key_buffer: "16M"

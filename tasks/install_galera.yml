@@ -1,33 +1,28 @@
 ---
 # check if mtab is there
 - name: check if mtab exists
-  action: shell test -f /etc/mtab && echo "aqui" || echo "nada" 
-  register: mtab_check 
+  shell: test -f /etc/mtab && echo "aqui" || echo "nada"
+  register: mtab_check
+  changed_when: false
 
 # Create link if not already exists. Upstart for mysql needs this! 
 - name: create mtab if not exists 
-  action: file src=/proc/mounts dest=/etc/mtab state=link
+  file: src=/proc/mounts dest=/etc/mtab state=link
   when: mtab_check.stdout == "nada"
 
-# file: tasks/install_galera.yml 
-# check if galera is already installed
-- name: check to determine if galera is aready installed
-  action: shell test -d /etc/mysql && echo "installed" || echo "bootstrap"
-  register: bootstrap_check 
+- name: Add Percona source repository
+  apt: deb="{{ galera_db_repo }}"
 
-# Create link if not already exists. Upstart for mysql needs this! 
-# - name: create /etc/mysql if not exists 
-#  action: file path=/etc/mysql state=directory
-#  when: bootstrap_check.stdout == "bootstrap"
+- name: Update apt cache
+  apt: update_cache=yes
 
 - name: Install Percona XtraDB Cluster server
-  apt: pkg={{ item }} 
-       state=present
+  apt: pkg={{ item }} state=present
   with_items:
-    - percona-xtradb-cluster-server-5.6
+    - percona-xtradb-cluster-56
     - python-mysqldb
-    - xinetd
-    - git 
+  register: aptget
 
-- name: Start MySQL
-  command: /etc/init.d/mysql restart
+- name: Stop mysql if apt changed
+  service: name=mysql state=stopped
+  when: aptget.changed

@@ -1,98 +1,81 @@
 [client]
-port            = 3306
-socket          = /var/run/mysqld/mysqld.sock
+port            = {{ galera_client_port }}
+socket          = {{ galera_client_socket }}
 
 [mysqld_safe]
-socket          = /var/run/mysqld/mysqld.sock
-nice            = 0
+socket          = {{ galera_mysqld_safe_socket }}
+nice            = {{ galera_mysqld_safe_nice }}
 
 [mysqld]
 
-bind_address            = {{ galera_conf['bind_address'] }}
-user                    = mysql
-pid-file                = /var/run/mysqld/mysqld.pid
-socket                  = /var/run/mysqld/mysqld.sock
-port                    = 3306
-basedir                 = /usr
-datadir                 = /var/lib/mysql
-default_storage_engine  = InnoDB
-tmpdir                  = /tmp
+bind_address            = {{ galera_mysqld_bind_address }}
+user                    = {{ galera_mysqld_user }}
+pid-file                = {{ galera_mysqld_pid_file }}
+socket                  = {{ galera_mysqld_socket }}
+port                    = {{ galera_mysqld_port }}
+basedir                 = {{ galera_mysqld_basedir }}
+datadir                 = {{ galera_mysqld_datadir }}
+default_storage_engine  = {{ galera_mysqld_default_storage_engine }}
+tmpdir                  = {{ galera_mysqld_tmpdir }}
 
-skip-name-resolve
+lc-messages-dir         = {{ galera_mysqld_lc_messages_dir }}
+key_buffer_size         = {{ galera_mysqld_key_buffer_size }}
+max_connections         = {{ galera_mysqld_max_connections }}
+max_allowed_packet      = {{ galera_mysqld_max_allowed_packet }}
+thread_stack            = {{ galera_mysqld_thread_stack }}
+thread_cache_size       = {{ galera_mysqld_thread_cache_size }}
 
-lc-messages-dir         = /usr/share/mysql
-skip-external-locking
-key_buffer              = 16M
-max_connections         = 100
-max_allowed_packet      = 16M
-thread_stack            = 192K
-thread_cache_size       = 8
+myisam-recover          = {{ galera_mysqld_myisam_recover }}
+query_cache_limit       = {{ galera_mysqld_query_cache_limit }}
+query_cache_size        = {{ galera_mysqld_query_cache_size }}
 
-myisam-recover          = BACKUP
-query_cache_limit       = 1M
-query_cache_size        = 16M
+log_error               = {{ galera_mysqld_log_error }}
+slow_query_log          = {{ galera_mysqld_slow_query_log }}
+long_query_time         = {{ galera_mysqld_long_query_time }}
 
-log_error               = /var/log/mysql/err.log
-slow_query_log          = 1
-long_query_time         = 2
-log-queries-not-using-indexes
+{% if galera_mysqld_server_id is defined %} 
+server-id               = {{ galera_mysqld_server_id }}
+{% endif %}
+log_bin                 = {{ galera_mysqld_log_bin }}
+sync_binlog             = {{ galera_mysqld_sync_binlog }}
+binlog_format           = {{ galera_mysqld_binlog_format }}
+expire_logs_days        = {{ galera_mysqld_expire_logs_days }}
+max_binlog_size         = {{ galera_mysqld_max_binlog_size }}
 
-# server-id               = 1
-log_bin                 = /var/log/mysql/mysql-bin.log
-sync_binlog             = 1
-binlog_format           = ROW
-expire_logs_days        = 2
-max_binlog_size         = 100M
-log_slave_updates
 
-wsrep_provider          = /usr/lib/libgalera_smm.so
-wsrep_slave_threads     = 4
-wsrep_sst_method        = xtrabackup
-wsrep_sst_auth          = {{ galera_conf['dbusers']['xtrabackup']['username'] }}:{{ galera_conf['dbusers']['xtrabackup']['password'] }}
-wsrep_cluster_name      = percona-cluster
+wsrep_provider          = {{ galera_mysqld_wsrep_provider }}
+wsrep_slave_threads     = {{ galera_mysqld_wsrep_slave_threads }}
+wsrep_sst_method        = {{ galera_mysqld_wsrep_sst_method }}
+wsrep_sst_auth          = {{ galera_db_xtrabackup.username }}:{{ galera_db_xtrabackup.password }}
+wsrep_cluster_name      = {{ galera_mysqld_wsrep_cluster_name }}
+wsrep_cluster_address   = gcomm://{{ ",".join(galera_nodes) }}
+wsrep_node_name         = {{ galera_mysqld_wsrep_node_name }}
+wsrep_node_address      = {{ galera_mysqld_wsrep_node_address }}
+wsrep_provider_options  = {{ galera_mysqld_wsrep_provider_options }}
 
-{# list of cluster members #}
-{% set cluster_members = [] -%}
+innodb_autoinc_lock_mode        = {{ galera_mysqld_innodb_autoinc_lock_mode }}
+{% if galera_mysqld_innodb_locks_unsafe_for_binlog is defined %} 
+innodb_locks_unsafe_for_binlog  = {{ galera_mysqld_innodb_locks_unsafe_for_binlog }}
+{% endif %}
+innodb_thread_concurrency       = {{ galera_mysqld_innodb_thread_concurrency }}
+innodb_buffer_pool_size         = {{ galera_mysqld_innodb_buffer_pool_size }}
+innodb_log_buffer_size          = {{ galera_mysqld_innodb_log_buffer_size }}
+{% if galera_mysqld_innodb_flush_method is defined %} 
+innodb_flush_method             = {{ galera_mysqld_innodb_flush_method }}
+{% endif %}
+innodb_log_file_size            = {{ galera_mysqld_innodb_log_file_size }}
 
-{# flag to bootstrap #}
-{% set bootstrap_cluster = 0 -%}
-
-{# if this is the first node AND bootstrap #}
-{%- if groups['galera_cluster'].index(inventory_hostname) == 0 and "bootstrap" in bootstrap_check.stdout_lines[0] %}
-  {%- set bootstrap_cluster = 1 %}
-{% endif -%}
-
-{%- if not bootstrap_cluster %}
-  {%- for node in groups['galera_cluster'] %}
-    {%- if hostvars[node].ansible_default_ipv4.address !=  ansible_eth0.ipv4.address %}
-      {%- set _ = cluster_members.append(hostvars[node].ansible_default_ipv4.address) -%}
-    {% endif -%}
-  {% endfor -%}
-{% endif -%}
-wsrep_cluster_address   = gcomm://{{ ",".join(cluster_members) }}
-wsrep_node_name         = {{ ansible_eth0.ipv4.address }}
-wsrep_provider_options  = gcache.size=2G;
-
-default_storage_engine          = InnoDB
-innodb_autoinc_lock_mode        = 2
-# innodb_locks_unsafe_for_binlog  = 1
-innodb_file_per_table
-innodb_thread_concurrency       = 0
-innodb_buffer_pool_size         = 50M
-innodb_log_buffer_size          = 64M
-# innodb_flush_method             = O_DIRECT
-innodb_log_file_size            = 500M
+{{ galera_mysqld_extra }}
 
 [mysqldump]
-quick
-quote-names
-max_allowed_packet      = 16M
+max_allowed_packet      = {{ galera_mysqldump_max_allowed_packet }}
+{{ galera_mysqldump_extra }}
 
 [mysql]
-#no-auto-rehash # faster start of mysql but no tab completition
+{{ galera_mysql_extra }}
 
 [isamchk]
-key_buffer              = 16M
+key_buffer              = {{ galera_isamchk_key_buffer }}
 
 
  

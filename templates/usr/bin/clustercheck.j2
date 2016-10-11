@@ -16,8 +16,8 @@ if [[ $1 == '-h' || $1 == '--help' ]];then
     exit
 fi
 
-MYSQL_USERNAME="{{ galera_conf['dbusers']['clustercheck']['username'] }}" 
-MYSQL_PASSWORD="{{ galera_conf['dbusers']['clustercheck']['password'] }}" 
+MYSQL_USERNAME="{{ galera_db_clustercheck.username }}"
+MYSQL_PASSWORD="{{ galera_db_clustercheck.password }}"
 AVAILABLE_WHEN_DONOR=${3:-0}
 ERR_FILE="${4:-/dev/null}" 
 AVAILABLE_WHEN_READONLY=${5:-1}

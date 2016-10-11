@@ -4,7 +4,7 @@ galaxy_info:
   description: An ansible role for Galera/Percona XtraDB Cluster 
   company: Hewlett Packard 
   license: Apache 2.0
-  min_ansible_version: 1.2
+  min_ansible_version: 2.1.2
   platforms:
   - name: Ubuntu
     versions:
@@ -12,5 +12,5 @@ galaxy_info:
     - raring
   categories:
   - database 
-  - packaging
+  - clustering
 dependencies: []
